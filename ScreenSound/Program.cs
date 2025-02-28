@@ -4,19 +4,20 @@ using ScreenSound.Modelos;
 
 try
 {
-    var artistaDAL = new ArtistaDAL();
-    artistaDAL.Adicionar(new Artista("Foo Fighter", "Foo Fighters é uma banda de Rock Alternativo da década de 90"));
+    var context = new ScreenSoundContext();
+    var artistaDAL = new ArtistaDAL(context);
     var listaArtistas = artistaDAL.Listar();
+
+    var novoArtista = new Artista("Gilberto Gil", "Gilberto é o cantor mais conhecido de MPB alem de produtor e multi-instrumentista");
+    var novoArtista2 = new Artista("Gilberto Gil", "Gilberto é o cantor mais conhecido de MPB alem de produtor e multi-instrumentista") { 10};
+
+    artistaDAL.Adicionar(novoArtista);
+    artistaDAL.Atualizar(novoArtista2);
 
     foreach ( var artista in listaArtistas )
     {
         Console.WriteLine( artista );
     }
-    Console.WriteLine("//");
-    artistaDAL.Delete("Foo Fighter");
-    Console.WriteLine("//");
-    artistaDAL.Adicionar(new Artista("Foo Fighter", "Foo Fighters é uma banda de Rock Alternativo da década de 90"));
-    artistaDAL.Atualizar("Djavan", "https://foto2", "Djavan é um conhecido cantor de MPB" );
 }
 catch(Exception ex)
 {
@@ -70,7 +71,7 @@ void ExibirOpcoesDoMenu()
     if (opcoes.ContainsKey(opcaoEscolhidaNumerica))
     {
         Menu menuASerExibido = opcoes[opcaoEscolhidaNumerica];
-        menuASerExibido.Executar(artistasRegistrados);
+        menuASerExibido.Executar(artistasRegistrados, artistaDAL);
         if (opcaoEscolhidaNumerica > 0) ExibirOpcoesDoMenu();
     } 
     else

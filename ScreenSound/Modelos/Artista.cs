@@ -21,6 +21,11 @@ internal class Artista
         musicas.Add(musica);
     }
 
+    public Artista? RecuperarPeloNome(string nome)
+    {
+        return context.Artistas.FirstOrDefault(a => a.Nome.Equals(nome));
+    }
+
     public void ExibirDiscografia()
     {
         Console.WriteLine($"Discografia do artista {Nome}");
