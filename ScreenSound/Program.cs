@@ -2,37 +2,19 @@
 using ScreenSound.Menus;
 using ScreenSound.Modelos;
 
-try
-{
-    var context = new ScreenSoundContext();
-    var artistaDAL = new ArtistaDAL(context);
-    var listaArtistas = artistaDAL.Listar();
+var context = new ScreenSoundContext();
+var artistaDAL = new ArtistaDAL(context);
+var musicasDAL = new MusicasDAL(context);
 
-    var novoArtista = new Artista("Gilberto Gil", "Gilberto é o cantor mais conhecido de MPB alem de produtor e multi-instrumentista");
-    var novoArtista2 = new Artista("Gilberto Gil", "Gilberto é o cantor mais conhecido de MPB alem de produtor e multi-instrumentista") { 10};
+Musica musica1 = new Musica("High Hopes");
+Musica musica2 = new Musica("I love rainy nights");
+Musica musica3 = new Musica("Radio Gaga");
+musicasDAL.AdicionarMusica(musica1);
+musicasDAL.AdicionarMusica(musica2);
+musicasDAL.AdicionarMusica(musica3);
 
-    artistaDAL.Adicionar(novoArtista);
-    artistaDAL.Atualizar(novoArtista2);
+musicasDAL.Listar();
 
-    foreach ( var artista in listaArtistas )
-    {
-        Console.WriteLine( artista );
-    }
-}
-catch(Exception ex)
-{
-
-    Console.WriteLine(ex.Message);
-}
-
-return;
-
-Artista ira = new Artista("Ira!", "Banda Ira!");
-Artista beatles = new("The Beatles", "Banda The Beatles");
-
-Dictionary<string, Artista> artistasRegistrados = new();
-artistasRegistrados.Add(ira.Nome, ira);
-artistasRegistrados.Add(beatles.Nome, beatles);
 
 Dictionary<int, Menu> opcoes = new();
 opcoes.Add(1, new MenuRegistrarArtista());
@@ -71,7 +53,7 @@ void ExibirOpcoesDoMenu()
     if (opcoes.ContainsKey(opcaoEscolhidaNumerica))
     {
         Menu menuASerExibido = opcoes[opcaoEscolhidaNumerica];
-        menuASerExibido.Executar(artistasRegistrados, artistaDAL);
+        menuASerExibido.Executar(artistaDAL);
         if (opcaoEscolhidaNumerica > 0) ExibirOpcoesDoMenu();
     } 
     else

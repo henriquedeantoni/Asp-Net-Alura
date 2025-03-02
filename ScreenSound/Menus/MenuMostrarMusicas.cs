@@ -11,13 +11,12 @@ internal class MenuMostrarMusicas : Menu
         ExibirTituloDaOpcao("Exibir detalhes do artista");
         Console.Write("Digite o nome do artista que deseja conhecer melhor: ");
         string nomeDoArtista = Console.ReadLine()!;
-        var artistaRecuperado = artistaDAL.RecuperarPeloNome
+        var artistaRecuperado = artistaDAL.RecuperarPeloNome(nomeDoArtista);
 
-        if (artistasRegistrados.ContainsKey(nomeDoArtista))
+        if (artistaRecuperado is not null)
         {
-            Artista artista = artistasRegistrados[nomeDoArtista];
             Console.WriteLine("\nDiscografia:");
-            artista.ExibirDiscografia();
+            artistaRecuperado.ExibirDiscografia();
             Console.WriteLine("\nDigite uma tecla para voltar ao menu principal");
             Console.ReadKey();
             Console.Clear();
