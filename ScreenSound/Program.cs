@@ -3,15 +3,15 @@ using ScreenSound.Menus;
 using ScreenSound.Modelos;
 
 var context = new ScreenSoundContext();
-var artistaDAL = new ArtistaDAL(context);
-var musicasDAL = new MusicasDAL(context);
+var artistaDAL = new DAL<Artista>(context);
+var musicasDAL = new DAL<Musica>(context);
 
 Musica musica1 = new Musica("High Hopes");
 Musica musica2 = new Musica("I love rainy nights");
 Musica musica3 = new Musica("Radio Gaga");
-musicasDAL.AdicionarMusica(musica1);
-musicasDAL.AdicionarMusica(musica2);
-musicasDAL.AdicionarMusica(musica3);
+musicasDAL.Adicionar(musica1);
+musicasDAL.Adicionar(musica2);
+musicasDAL.Adicionar(musica3);
 
 musicasDAL.Listar();
 
