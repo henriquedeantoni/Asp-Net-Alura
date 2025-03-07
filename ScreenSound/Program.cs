@@ -6,15 +6,6 @@ var context = new ScreenSoundContext();
 var artistaDAL = new DAL<Artista>(context);
 var musicasDAL = new DAL<Musica>(context);
 
-Musica musica1 = new Musica("High Hopes");
-Musica musica2 = new Musica("I love rainy nights");
-Musica musica3 = new Musica("Radio Gaga");
-musicasDAL.Adicionar(musica1);
-musicasDAL.Adicionar(musica2);
-musicasDAL.Adicionar(musica3);
-
-musicasDAL.Listar();
-
 
 Dictionary<int, Menu> opcoes = new();
 opcoes.Add(1, new MenuRegistrarArtista());
