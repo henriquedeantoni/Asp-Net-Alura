@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ScreenSound.API.Requests;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
 
@@ -23,9 +24,10 @@ namespace ScreenSound.API.Endpoints
                 return Results.Ok(musica.ToString());
             });
 
-            app.MapPost("/Musicas/{id}", ([FromServices] DAL<Musica> dal, [FromBody] Musica musica) => {
+            app.MapPost("/Musicas/{id}", ([FromServices] DAL<Musica> dal, [FromBody] MusicaRequest musicaRequest) => {
+                var musica = new Musica(musicaRequest.nome, musicaRequest.ArtistaId, musicaRequest.anoLancamento);
                 dal.Adicionar(musica);
-                return Results.Ok(musica);
+                return Results.Ok();
             });
 
             app.MapDelete("/Musicas/{id}", ([FromServices] DAL<Musica> dal, int id) => {
@@ -38,14 +40,15 @@ namespace ScreenSound.API.Endpoints
                 return Results.NoContent();
             });
 
-            app.MapPut("/Musicas", ([FromServices] DAL<Musica> dal, [FromBody] Musica musica) => {
-                var musicaAtualizar = dal.RecuperarPor(a => a.Id == musica.Id);
-                if (musicaAtualizar is null)
+            app.MapPut("/Musicas", ([FromServices] DAL<Musica> dal, [FromBody] MusicaRequestEdit musicaRequestEdit) => {
+                var musicaAtualizar = dal.RecuperarPor(a => a.Id == musicaRequestEdit.Id);
+                
+                if(musicaAtualizar is null)
                 {
                     return Results.NotFound();
                 }
-                musicaAtualizar.Nome = musica.Nome;
-                musicaAtualizar.AnoLancamento = musica.AnoLancamento;
+                musicaAtualizar.Nome = musicaRequestEdit.nome;
+                musicaAtualizar.AnoLancamento = musicaRequestEdit.anoLancamento;
 
                 dal.Atualizar(musicaAtualizar);
                 return Results.Ok();
