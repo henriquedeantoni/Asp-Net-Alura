@@ -3,6 +3,7 @@ using ScreenSound.API.Requests;
 using ScreenSound.API.Response;
 using ScreenSound.Banco;
 using ScreenSound.Modelos;
+using ScreenSoundShared.Modelos.Modelos;
 
 namespace ScreenSound.API.Endpoints
 {
@@ -23,17 +24,27 @@ namespace ScreenSound.API.Endpoints
                 return Results.Ok(musicaListResponse);
             });
 
-            app.MapGet("/Musicas/{nome}", ([FromServices] DAL<Musica> dal, string nome) => {
+            app.MapGet("/Musicas/{nome}", ([FromServices] DAL<Musica> dal,  string nome) => {
                 var musica = dal.RecuperarPor(a => a.Nome.ToUpper().Equals(nome.ToUpper()));
                 if (musica is null)
                 {
-                    return Results.Ok(musica);
+                    return Results.NotFound();
                 }
                 return Results.Ok(musica.ToString());
             });
 
-            app.MapPost("/Musicas/{id}", ([FromServices] DAL<Musica> dal, [FromBody] MusicaRequest musicaRequest) => {
-                var musica = new Musica(musicaRequest.nome);
+            app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal, 
+                [FromServices] DAL<Genero> dalGenero,
+                [FromBody] MusicaRequest musicaRequest) => {
+                    var musica = new Musica(musicaRequest.nome)
+                    {
+                        ArtistaId = musicaRequest.ArtistaId,
+                        AnoLancamento = musicaRequest.anoLancamento,
+
+                        Generos = musicaRequest.Generos is not null ?
+                        GeneroRequestConverter(musicaRequest.Generos, dalGenero) :
+                        new List<Genero>()
+                    };
                 dal.Adicionar(musica);
                 return Results.Ok();
             });
@@ -63,6 +74,31 @@ namespace ScreenSound.API.Endpoints
             });
 
             #endregion
+        }
+
+        private static ICollection<Genero> GeneroRequestConverter(ICollection<GeneroRequest> generos, DAL<Genero> dalGenero)
+        {
+            var listaDeGeneros = new List<Genero>();
+            foreach(var item in generos)
+            {
+                var entity = RequestToEntity(item);
+                var genero = dalGenero.RecuperarPor(g => g.Nome.ToUpper().Equals(item.Nome.ToUpper()));
+                if(genero is not null)
+                {
+                    listaDeGeneros.Add(genero);
+                }
+                else
+                {
+                    listaDeGeneros.Add(entity);
+                }
+            }
+
+            return listaDeGeneros;
+        }
+
+        private static Genero RequestToEntity(GeneroRequest genero)
+        {
+            return new Genero() { Nome = genero.Nome, Descricao = genero.Descricao };
         }
 
         private static ICollection<MusicaResponse> EntityListToResponseList(IEnumerable<Musica> musicaList)
