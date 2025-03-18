@@ -30,7 +30,7 @@ namespace ScreenSound.API.Endpoints
                 {
                     return Results.NotFound();
                 }
-                return Results.Ok(musica.ToString());
+                return Results.Ok(EntityToResponse(musica));
             });
 
             app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal, 
