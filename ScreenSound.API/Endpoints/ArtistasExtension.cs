@@ -60,7 +60,6 @@ namespace ScreenSound.API.Endpoints
                     }
                     artistaAtualizar.Nome = artistaRequestEdit.nome;
                     artistaAtualizar.Bio = artistaRequestEdit.bio;
-                    artistaAtualizar.FotoPerfil = artistaRequestEdit.fotoPerfil;
 
                     dal.Atualizar(artistaAtualizar);
                     return Results.Ok();
